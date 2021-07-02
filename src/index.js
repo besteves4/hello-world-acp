@@ -10,33 +10,15 @@ import {
   import {
     getSolidDataset,
     getThing,
-    getThingAll,
     getStringNoLocale,
     createSolidDataset,
     createThing,
     setThing,
     addUrl,
     addStringNoLocale,
-    saveSolidDatasetAt
+    saveSolidDatasetAt,
+    acp_v3
   } from "@inrupt/solid-client";
-
-  import {
-    getSolidDatasetWithAcr,
-    saveAcrFor
-  } from "@inrupt/solid-client/acp/acp"
-
-  import {
-    createResourceRuleFor,
-    setPublic,
-    setAllOfRuleUrl,
-    setResourceRule
-  } from "@inrupt/solid-client/acp/rule"
-  
-  import {
-    createResourcePolicyFor,
-    setAllowModes,
-    setResourcePolicy
-  } from "@inrupt/solid-client/acp/policy"
 
   import { VCARD, SCHEMA_INRUPT, RDF, AS } from "@inrupt/vocab-common-rdf";
   
@@ -127,7 +109,7 @@ import {
     readProfile();
   };
 
-  // 3. Create the Reading List
+  // 3. Create a Resource and its Access Control Resource
   async function createList() {
     labelCreateStatus.textContent = "";
     const podUrl = document.getElementById("PodURL").value;
@@ -135,46 +117,26 @@ import {
     let titles = document.getElementById("titles").value.split("\n");
 
     // Create a new SolidDataset (i.e., the reading list)
-    let myReadingList  = createSolidDataset();
-   
+    let emptySolidDataset = createSolidDataset();
+
+
     // Add titles to the Dataset
     for (let i = 0; i < titles.length; i++) {
       let title = createThing({name: "title" + i});
       title = addUrl(title, RDF.type, AS.Article);
       title = addStringNoLocale(title, SCHEMA_INRUPT.name, titles[i]);
-      myReadingList = setThing(myReadingList, title);
+      emptySolidDataset = setThing(emptySolidDataset, title);
     }
 
     try {
       
-      // Save the SolidDataset 
-      let savedReadingList = await saveSolidDatasetAt(
-        podUrl,
-        myReadingList,
-        { fetch: fetch }
-      );
+      // Save the SolidDataset
+       await saveSolidDatasetAt(podUrl, emptySolidDataset, { fetch: fetch });
+      const solidDatasetWithAcr = await acp_v3.getSolidDatasetWithAcr(podUrl, );
 
       labelCreateStatus.textContent = "Saved";
       // Disable Create button
       buttonCreate.disabled=true;
-
-      // Refetch the Reading List
-      savedReadingList = await getSolidDataset(
-        podUrl,
-        { fetch: fetch }
-      );
-
-      let items = getThingAll(savedReadingList);
-
-      let listcontent="";
-      for (let i = 0; i < items.length; i++) {
-        let item = getStringNoLocale(items[i], SCHEMA_INRUPT.name);
-        if (item != null) {
-            listcontent += item + "\n";
-        }
-      }
-
-      document.getElementById("savedtitles").value = listcontent;
 
     } catch (error) {
       console.log(error);
@@ -187,20 +149,23 @@ buttonCreate.onclick = function() {
   createList();
 };
 
-// 4. Manage the access to a Resource //https://pod.inrupt.com/beatrizesteves/tests/myList
+// 4. Manage the access to a Resource //https://pod.inrupt.com/beatrizesteves/public/testList
 async function getResourcePolicy() {
   const resourceURL = document.getElementById("ResourceURL").value;
+  const resource = await acp_v3.getFileWithAccessDatasets(resourceURL, );
+  const acr = await acp_v3.mockAcrFor(resourceURL, );
+  const resourceAcr = await acp_v3.addMockAcrTo(resource, acr);
 
-  // Fetch the Resource and its Access Control Resource
-  const resourceWithAcr = await getSolidDatasetWithAcr(resourceURL, { fetch: fetch });
+  // document.getElementById("policiesRetrieved").value = acp_v3.hasAccessibleAcr(resource);
+  document.getElementById("policiesRetrieved").value = acp_v3.acrAsMarkdown(resourceAcr);
 
-  // Create the Resource-specific Rule
-  let resourceRule = createResourceRuleFor(resourceWithAcr, "rule-public")
+/*  // Create the Resource-specific Rule
+  let resourceRule = createResourceRuleFor(resourceAcr, "rule-public")
   resourceRule = setPublic(resourceRule);
 
   // Create the Resource-specific Policy, and add the Rule to it:
   let resourcePolicy = createResourcePolicyFor(
-    resourceWithAcr,
+    resourceAcr,
     "policy-public",
   );
   resourcePolicy = setAllOfRuleUrl(
@@ -209,12 +174,12 @@ async function getResourcePolicy() {
   );
   resourcePolicy = setAllowModes(
     resourcePolicy,
-    { read: true, append: false, write: false },
+    { read: true, append: false, write: true },
   );
 
   // Save both the new Rule and the new Policy in the Access Control Resource:
   let updatedResourceWithAcr = setResourceRule(
-    resourceWithAcr,
+    resourceAcr,
     resourceRule,
   );
   updatedResourceWithAcr = setResourcePolicy(
@@ -222,11 +187,13 @@ async function getResourcePolicy() {
     resourcePolicy,
   );
 
+  document.getElementById("policiesRetrieved").value = acp_v3.acrAsMarkdown(updatedResourceWithAcr);
+
   // Save the updated Access Control Resource:
-  await saveAcrFor(updatedResourceWithAcr);
+  await saveAcrFor(updatedResourceWithAcr); */
 
   // Display policies
-  document.getElementById("policiesRetrieved").value = updatedResourceWithAcr;
+  // document.getElementById("policiesRetrieved").value = acrPolicyUrl;
 }
 
 buttonGetResourcePolicy.onclick = function() {  
