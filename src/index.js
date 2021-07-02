@@ -36,7 +36,7 @@ import {
       oidcIssuer: "https://broker.pod.inrupt.com",
   
       redirectUrl: window.location.href,
-      clientName: "Getting started app"
+      clientName: "Hello!!!"
     });
   }
   
@@ -152,12 +152,13 @@ buttonCreate.onclick = function() {
 // 4. Manage the access to a Resource //https://pod.inrupt.com/beatrizesteves/public/testList
 async function getResourcePolicy() {
   const resourceURL = document.getElementById("ResourceURL").value;
-  const resource = await acp_v3.getFileWithAccessDatasets(resourceURL, );
-  const acr = await acp_v3.mockAcrFor(resourceURL, );
-  const resourceAcr = await acp_v3.addMockAcrTo(resource, acr);
+  // const resource = await acp_v3.getFileWithAccessDatasets(resourceURL, );
+  const solidDatasetWithAcr = await acp_v3.getSolidDatasetWithAcr(resourceURL, { fetch: fetch });
+/*   const acr = await acp_v3.mockAcrFor(resourceURL, );
+  const resourceAcr = await acp_v3.addMockAcrTo(resource, acr); */
 
-  // document.getElementById("policiesRetrieved").value = acp_v3.hasAccessibleAcr(resource);
-  document.getElementById("policiesRetrieved").value = acp_v3.acrAsMarkdown(resourceAcr);
+  // document.getElementById("policiesRetrieved").value = acp_v3.hasAccessibleAcr(solidDatasetWithAcr);
+  document.getElementById("policiesRetrieved").value = acp_v3.acrAsMarkdown(solidDatasetWithAcr);
 
 /*  // Create the Resource-specific Rule
   let resourceRule = createResourceRuleFor(resourceAcr, "rule-public")

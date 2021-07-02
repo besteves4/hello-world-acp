@@ -23,7 +23,7 @@
     <div id="read" class="panel" >
       <div class="row">
         <label id="readlabel" for="webID">2. Enter a WebID: </label>
-        <input type="url" id="webID" name="webID"  size="50" pattern="https://.*"  value="https://pod.inrupt.com/beatrizesteves/profile/card#me">
+        <input type="url" id="webID" name="webID" size="50" pattern="https://.*" value="https://pod.inrupt.com/beatrizesteves/profile/card#me">
         <button name="btnRead" id="btnRead" >Read Profile</button>
       </div>
       <dl class="display"> 
@@ -42,7 +42,7 @@
       </div>
       <div class="row">
         <label id="podlabel" for="PodURL">a. Enter your file URL: </label>
-        <input type="url" id="PodURL" name="PodURL"  size="50" pattern="https://.*"  value="https://pod.inrupt.com/beatrizesteves/public/filename">
+        <input type="url" id="PodURL" name="PodURL" size="50" pattern="https://.*" value="https://pod.inrupt.com/beatrizesteves/public/filename">
       </div>
       <div class="row">
         <label id="listLabel" for="titles">b. Enter items to write in the file: </label>
@@ -57,12 +57,13 @@
       </div>
       <div class="row">
         <label id="resourcelabel" for="ResourceURL">a. Enter your resource URL: </label>
-        <input type="url" id="ResourceURL" name="ResourceURL"  size="50" pattern="https://.*"  placeholder="e.g., https://pod.inrupt.com/<username>/private/myList">
-        <button name="btnGetResourcePolicy" id="btnGetResourcePolicy">Display the updated ACR</button>
+        <input type="url" id="ResourceURL" name="ResourceURL" size="50" pattern="https://.*" value="https://pod.inrupt.com/beatrizesteves/public/filename">
+        <button name="btnGetResourcePolicy" id="btnGetResourcePolicy">Display the ACR</button>
       </div>
       <div class="row">
-        <textarea id="policiesRetrieved" name="policiesRetrieved" rows="5" cols="42" readonly></textarea>
+        <textarea id="policiesRetrieved" name="policiesRetrieved" rows="10" cols="100" readonly></textarea>
       </div>
     </div>
+    
   </body>
 </html>
