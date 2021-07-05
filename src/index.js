@@ -179,10 +179,12 @@ async function updateResourcePolicy() {
   let updatedResourceWithAcr = acp_v3.setResourceRule(solidDatasetWithAcr, resourceRule, );
   updatedResourceWithAcr = acp_v3.setResourcePolicy(updatedResourceWithAcr, resourcePolicy, );
 
-  document.getElementById("updatedPoliciesRetrieved").value = acp_v3.acrAsMarkdown(updatedResourceWithAcr);
-
   // Save the updated Access Control Resource:
   await acp_v3.saveAcrFor(updatedResourceWithAcr, { fetch: fetch });
+
+  document.getElementById("updatedPoliciesRetrieved").value = acp_v3.acrAsMarkdown(updatedResourceWithAcr);
+  document.getElementById("policyAsMarkdown").value = acp_v3.policyAsMarkdown(resourcePolicy);
+  document.getElementById("ruleAsMarkdown").value = acp_v3.ruleAsMarkdown(resourceRule);
 }
 
 buttonUpdateResourcePolicy.onclick = function() {  
