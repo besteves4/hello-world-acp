@@ -5,6 +5,7 @@ h2,h3 {
 body * {
    margin-left: .5rem;
    margin-right: 1rem;
+   font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
 header {
