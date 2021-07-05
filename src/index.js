@@ -28,6 +28,7 @@ import {
   buttonCreate.disabled=true;
   const labelCreateStatus = document.querySelector("#labelCreateStatus");
   const buttonGetResourcePolicy = document.querySelector("#btnGetResourcePolicy");
+  const buttonUpdateResourcePolicy = document.querySelector("#btnUpdateResourcePolicy");
 
   // 1a. Start Login Process. Call login() function.
   function loginToInruptDotCom() {
@@ -78,7 +79,6 @@ import {
     // - You can either omit `fetch` or 
     // - You can pass in `fetch` with or without logging in first. 
     //   If logged in, the `fetch` is authenticated.
-    // For illustrative purposes, the `fetch` is passed in.
     const myDataset = await getSolidDataset(profileDocumentURI, { fetch: fetch });
   
     // Get the Profile data from the retrieved SolidDataset
@@ -132,7 +132,6 @@ import {
       
       // Save the SolidDataset
        await saveSolidDatasetAt(podUrl, emptySolidDataset, { fetch: fetch });
-      const solidDatasetWithAcr = await acp_v3.getSolidDatasetWithAcr(podUrl, );
 
       labelCreateStatus.textContent = "Saved";
       // Disable Create button
@@ -149,54 +148,43 @@ buttonCreate.onclick = function() {
   createList();
 };
 
-// 4. Manage the access to a Resource //https://pod.inrupt.com/beatrizesteves/public/testList
+// 4. Fetch the Resource and display its Access Control Resource.
 async function getResourcePolicy() {
   const resourceURL = document.getElementById("ResourceURL").value;
-  // const resource = await acp_v3.getFileWithAccessDatasets(resourceURL, );
   const solidDatasetWithAcr = await acp_v3.getSolidDatasetWithAcr(resourceURL, { fetch: fetch });
-/*   const acr = await acp_v3.mockAcrFor(resourceURL, );
-  const resourceAcr = await acp_v3.addMockAcrTo(resource, acr); */
 
-  // document.getElementById("policiesRetrieved").value = acp_v3.hasAccessibleAcr(solidDatasetWithAcr);
   document.getElementById("policiesRetrieved").value = acp_v3.acrAsMarkdown(solidDatasetWithAcr);
-
-/*  // Create the Resource-specific Rule
-  let resourceRule = createResourceRuleFor(resourceAcr, "rule-public")
-  resourceRule = setPublic(resourceRule);
-
-  // Create the Resource-specific Policy, and add the Rule to it:
-  let resourcePolicy = createResourcePolicyFor(
-    resourceAcr,
-    "policy-public",
-  );
-  resourcePolicy = setAllOfRuleUrl(
-    resourcePolicy,
-    resourceRule,
-  );
-  resourcePolicy = setAllowModes(
-    resourcePolicy,
-    { read: true, append: false, write: true },
-  );
-
-  // Save both the new Rule and the new Policy in the Access Control Resource:
-  let updatedResourceWithAcr = setResourceRule(
-    resourceAcr,
-    resourceRule,
-  );
-  updatedResourceWithAcr = setResourcePolicy(
-    updatedResourceWithAcr,
-    resourcePolicy,
-  );
-
-  document.getElementById("policiesRetrieved").value = acp_v3.acrAsMarkdown(updatedResourceWithAcr);
-
-  // Save the updated Access Control Resource:
-  await saveAcrFor(updatedResourceWithAcr); */
-
-  // Display policies
-  // document.getElementById("policiesRetrieved").value = acrPolicyUrl;
 }
 
 buttonGetResourcePolicy.onclick = function() {  
   getResourcePolicy();
+};
+
+
+// 5. Update the Access Control Resource of the created Resource.
+async function updateResourcePolicy() {
+  const resourceURL = document.getElementById("UpdateResourceURL").value;
+  const solidDatasetWithAcr = await acp_v3.getSolidDatasetWithAcr(resourceURL, { fetch: fetch });
+
+ // Create the Resource-specific Rule
+  let resourceRule = acp_v3.createResourceRuleFor(solidDatasetWithAcr, "rule-public")
+  resourceRule = acp_v3.setPublic(resourceRule);
+
+  // Create the Resource-specific Policy, and add the Rule to it:
+  let resourcePolicy = acp_v3.createResourcePolicyFor(solidDatasetWithAcr, "policy-public", );
+  resourcePolicy = acp_v3.setAllOfRuleUrl(resourcePolicy, resourceRule, );
+  resourcePolicy = acp_v3.setAllowModes(resourcePolicy, { read: true, append: false, write: true }, );
+
+  // Save both the new Rule and the new Policy in the Access Control Resource:
+  let updatedResourceWithAcr = acp_v3.setResourceRule(solidDatasetWithAcr, resourceRule, );
+  updatedResourceWithAcr = acp_v3.setResourcePolicy(updatedResourceWithAcr, resourcePolicy, );
+
+  document.getElementById("updatedPoliciesRetrieved").value = acp_v3.acrAsMarkdown(updatedResourceWithAcr);
+
+  // Save the updated Access Control Resource:
+  await acp_v3.saveAcrFor(updatedResourceWithAcr, { fetch: fetch });
+}
+
+buttonUpdateResourcePolicy.onclick = function() {  
+  updateResourcePolicy();
 };

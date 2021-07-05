@@ -23,7 +23,7 @@
     <div id="read" class="panel" >
       <div class="row">
         <label id="readlabel" for="webID">2. Enter a WebID: </label>
-        <input type="url" id="webID" name="webID" size="50" pattern="https://.*" value="https://pod.inrupt.com/beatrizesteves/profile/card#me">
+        <input type="url" id="webID" name="webID" size="70" pattern="https://.*" value="https://pod.inrupt.com/beatrizesteves/profile/card#me">
         <button name="btnRead" id="btnRead" >Read Profile</button>
       </div>
       <dl class="display"> 
@@ -42,7 +42,7 @@
       </div>
       <div class="row">
         <label id="podlabel" for="PodURL">a. Enter your file URL: </label>
-        <input type="url" id="PodURL" name="PodURL" size="50" pattern="https://.*" value="https://pod.inrupt.com/beatrizesteves/public/filename">
+        <input type="url" id="PodURL" name="PodURL" size="70" pattern="https://.*" value="https://pod.inrupt.com/beatrizesteves/private/filename">
       </div>
       <div class="row">
         <label id="listLabel" for="titles">b. Enter items to write in the file: </label>
@@ -57,13 +57,26 @@
       </div>
       <div class="row">
         <label id="resourcelabel" for="ResourceURL">a. Enter your resource URL: </label>
-        <input type="url" id="ResourceURL" name="ResourceURL" size="50" pattern="https://.*" value="https://pod.inrupt.com/beatrizesteves/public/filename">
+        <input type="url" id="ResourceURL" name="ResourceURL" size="70" pattern="https://.*" value="https://pod.inrupt.com/beatrizesteves/private/filename">
         <button name="btnGetResourcePolicy" id="btnGetResourcePolicy">Display the ACR</button>
       </div>
       <div class="row">
         <textarea id="policiesRetrieved" name="policiesRetrieved" rows="10" cols="100" readonly></textarea>
       </div>
     </div>
-    
+    <div id="access" class="panel" >
+      <div class="row">
+        <label id="updateAccesslabel">5. Update the Access Control Resource of the created Resource.</label>
+      </div>
+      <div class="row">
+        <label id="updateresourcelabel" for="UpdateResourceURL">a. Enter your resource URL: </label>
+        <input type="url" id="UpdateResourceURL" name="UpdateResourceURL" size="70" pattern="https://.*" value="https://pod.inrupt.com/beatrizesteves/private/filename">
+        <button name="btnUpdateResourcePolicy" id="btnUpdateResourcePolicy">Update the ACR</button>
+      </div>
+      <div class="row">
+        <textarea id="updatedPoliciesRetrieved" name="updatedPoliciesRetrieved" rows="10" cols="100" readonly></textarea>
+      </div>
+    </div>
+    <!-- add other metadata to acr -->
   </body>
 </html>
