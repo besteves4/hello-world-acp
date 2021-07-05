@@ -15,7 +15,9 @@ module.exports = {
     ]
   },
   devServer: {
-    contentBase: "./dist"
+    contentBase: "./dist",
+    compress: true,
+    disableHostCheck: true
   },
   resolve: {
       fallback: { 
