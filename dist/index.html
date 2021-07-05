@@ -83,6 +83,20 @@
         <textarea id="ruleAsMarkdown" name="ruleAsMarkdown" rows="10" cols="100" readonly></textarea>
       </div>
     </div>
-    <!-- add other metadata to acr -->
+    <div id="access" class="panel" >
+      <div class="row">
+        <label id="updateAccesslabel">6. Add personal data category metadata to the Access Control Resource.</label>
+      </div>
+      <div class="row">
+        <label id="personaldatalabel" for="PersonalDataURL">a. Enter your resource URL:</label><br>
+        <input type="url" id="PersonalDataURL" name="PersonalDataURL" size="70" pattern="https://.*" value="https://pod.inrupt.com/beatrizesteves/private/filename"><br>
+        <label id="personaldata" for="PersonalData">b. Enter personal data category:</label><br>
+        <input type="url" id="PersonalData" name="PersonalData" size="70" value="Contact"><br>
+        <button name="btnAddPersonalData" id="btnAddPersonalData">Update the ACR</button>
+      </div>
+      <div class="row">
+        <textarea id="showMetadata" name="showMetadata" rows="10" cols="100" readonly></textarea>
+      </div>
+    </div>
   </body>
 </html>

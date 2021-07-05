@@ -17,10 +17,11 @@ import {
     addUrl,
     addStringNoLocale,
     saveSolidDatasetAt,
+    solidDatasetAsMarkdown,
     acp_v3
   } from "@inrupt/solid-client";
 
-  import { VCARD, SCHEMA_INRUPT, RDF, AS } from "@inrupt/vocab-common-rdf";
+  import { VCARD, SCHEMA_INRUPT, RDF, AS, FOAF } from "@inrupt/vocab-common-rdf";
   
   const buttonLogin = document.querySelector("#btnLogin");
   const buttonRead = document.querySelector("#btnRead");
@@ -29,6 +30,7 @@ import {
   const labelCreateStatus = document.querySelector("#labelCreateStatus");
   const buttonGetResourcePolicy = document.querySelector("#btnGetResourcePolicy");
   const buttonUpdateResourcePolicy = document.querySelector("#btnUpdateResourcePolicy");
+  const buttonAddPersonalData = document.querySelector("#btnAddPersonalData");
 
   // 1a. Start Login Process. Call login() function.
   function loginToInruptDotCom() {
@@ -189,4 +191,31 @@ async function updateResourcePolicy() {
 
 buttonUpdateResourcePolicy.onclick = function() {  
   updateResourcePolicy();
+};
+
+async function addPersonalData() {
+  let personalDataURL = document.getElementById("PersonalDataURL").value;
+  // The ACR of a file / folder is created at ?ext=acr
+  personalDataURL = personalDataURL + "?ext=acr"
+
+  const personalData = document.getElementById("PersonalData").value;
+
+  const solidDataset = await getSolidDataset(personalDataURL, { fetch: fetch });
+  const acr = getThing(solidDataset, personalDataURL);
+
+  // Add personal data category to the dataset
+  const dpv = "http://www.w3.org/ns/dpv#"
+  const dpvHasPersonalData = "http://www.w3.org/ns/dpv#hasPersonalDataCategory"
+  let updatedACR = addStringNoLocale(acr, dpvHasPersonalData, dpv+personalData);
+
+  const myChangedDataset = setThing(solidDataset, updatedACR);
+
+  // The function returns a SolidDataset that reflects your sent data
+  const savedProfileResource = await saveSolidDatasetAt(personalDataURL, myChangedDataset, { fetch: fetch });
+
+  document.getElementById("showMetadata").value = solidDatasetAsMarkdown(savedProfileResource);
+}
+
+buttonAddPersonalData.onclick = function() {
+  addPersonalData();
 };
